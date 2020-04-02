@@ -8,12 +8,13 @@ import br.com.alura.forum.model.Usuario;
 import br.com.alura.forum.repository.Cursorepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import br.com.alura.forum.repository.UsuarioRepository;
-import org.apache.tomcat.util.http.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -39,7 +40,7 @@ public class TopicoController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody TopicoForm form){
+    public ResponseEntity<TopicoDTO> salvar(@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder){
 
         Curso curso = cursorepository.findByNome(form.getCursoNome());
         Topico topico = form.toEntity(curso);
@@ -52,6 +53,9 @@ public class TopicoController {
 
         topicoRepository.save(topico);
 
+        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new TopicoDTO(topico));
     }
 
 
