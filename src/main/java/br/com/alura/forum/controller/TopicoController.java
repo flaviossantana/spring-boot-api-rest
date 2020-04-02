@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class TopicoController {
     }
 
     @PostMapping
-    public ResponseEntity<TopicoDTO> salvar(@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<TopicoDTO> salvar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder){
 
         Curso curso = cursorepository.findByNome(form.getCursoNome());
         Topico topico = form.toEntity(curso);

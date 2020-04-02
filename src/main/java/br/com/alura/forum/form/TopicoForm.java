@@ -3,12 +3,24 @@ package br.com.alura.forum.form;
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class TopicoForm {
 
+    @NotNull(message = "Título não pode ser nulo")
+    @NotEmpty(message = "Título não pode ser vazio")
+    @Size(max = 50, message = "Tamanho do Título maior que 50 caracteres")
     private String titulo;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 4, max = 200)
     private String mensagem;
 
+    @NotNull
+    @NotEmpty
     private String cursoNome;
 
     public TopicoForm() {
