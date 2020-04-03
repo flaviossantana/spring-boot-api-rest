@@ -23,18 +23,18 @@ public class CustomRestExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public List<ErrorMessageDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-
         List<ErrorMessageDTO> messageDTOS = new ArrayList<>();
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-
-        fieldErrors.forEach(error -> {
-            String mensagem =  messageSource.getMessage(error, LocaleContextHolder.getLocale()) ;
-            ErrorMessageDTO dto = new ErrorMessageDTO(error.getField(), mensagem);
-            messageDTOS.add(dto);
-        });
-
+        fieldErrors.forEach(error -> addMensagemErro(messageDTOS, error));
         return messageDTOS;
+    }
 
+    private void addMensagemErro(List<ErrorMessageDTO> messageDTOS, FieldError error) {
+        messageDTOS.add(new ErrorMessageDTO(error.getField(), getMensagem(error)));
+    }
+
+    private String getMensagem(FieldError error) {
+        return messageSource.getMessage(error, LocaleContextHolder.getLocale());
     }
 
 }
