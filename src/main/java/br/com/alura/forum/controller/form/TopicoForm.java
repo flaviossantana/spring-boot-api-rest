@@ -1,4 +1,4 @@
-package br.com.alura.forum.form;
+package br.com.alura.forum.controller.form;
 
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 public class TopicoForm {
 
     @NotNull(message = "Título não pode ser nulo")
-    @NotEmpty(message = "Título não pode ser vazio")
+    @NotEmpty //Utilizando mensagem padrão (não pode estar vazio)
     @Size(max = 50, message = "Tamanho do Título maior que 50 caracteres")
     private String titulo;
 

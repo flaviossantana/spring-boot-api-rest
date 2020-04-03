@@ -1,7 +1,7 @@
 package br.com.alura.forum.controller;
 
-import br.com.alura.forum.dto.TopicoDTO;
-import br.com.alura.forum.form.TopicoForm;
+import br.com.alura.forum.controller.dto.TopicoDTO;
+import br.com.alura.forum.controller.form.TopicoForm;
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
 import br.com.alura.forum.model.Usuario;
