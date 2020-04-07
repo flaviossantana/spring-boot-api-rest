@@ -1,7 +1,10 @@
 package br.com.alura.forum.controller.validation.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class ErrorMessageDTO {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String campo;
     private String mensagem;
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,12 @@ public class CustomRestExceptionHandler {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         fieldErrors.forEach(error -> addMensagemErro(messageDTOS, error));
         return messageDTOS;
+    }
+
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ErrorMessageDTO handleEntityNotFound(EntityNotFoundException ex){
+        return new ErrorMessageDTO(null, ex.getLocalizedMessage());
     }
 
     private void addMensagemErro(List<ErrorMessageDTO> messageDTOS, FieldError error) {
