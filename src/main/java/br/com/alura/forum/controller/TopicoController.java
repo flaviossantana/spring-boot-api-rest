@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -83,9 +84,23 @@ public class TopicoController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id){
+    public ResponseEntity deletar(@PathVariable Long id){
+
+        if (isTopicoNotFound(id)){
+            return ResponseEntity.notFound().build();
+        }
+
         topicoRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    private boolean isTopicoNotFound(@PathVariable Long id) {
+        Optional<Topico> optional = topicoRepository.findById(id);
+
+        if(!optional.isPresent()){
+            return true;
+        }
+        return false;
     }
 
 }

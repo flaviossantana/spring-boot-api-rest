@@ -32,8 +32,8 @@ public class CustomRestExceptionHandler {
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
-    public ErrorMessageDTO handleEntityNotFound(EntityNotFoundException ex){
-        return new ErrorMessageDTO(null, ex.getLocalizedMessage());
+    public void handleEntityNotFound(EntityNotFoundException ex){
+
     }
 
     private void addMensagemErro(List<ErrorMessageDTO> messageDTOS, FieldError error) {
