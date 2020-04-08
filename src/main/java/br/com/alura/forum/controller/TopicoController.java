@@ -44,6 +44,12 @@ public class TopicoController {
                 .findByCursoNomeContainingIgnoreCase(nomeCurso));
     }
 
+    @GetMapping("/{id}")
+    public TopicoDetalheDTO detalhar(@PathVariable Long id){
+        return new TopicoDetalheDTO(topicoRepository.getOne(id));
+    }
+
+    @Transactional
     @PostMapping
     public ResponseEntity<TopicoDTO> salvar(
             @RequestBody @Valid TopicoForm form,
@@ -68,17 +74,18 @@ public class TopicoController {
         return ResponseEntity.created(uri).body(new TopicoDTO(topico));
     }
 
-    @GetMapping("/{id}")
-    public TopicoDetalheDTO detalhar(@PathVariable Long id){
-        return new TopicoDetalheDTO(topicoRepository.getOne(id));
-    }
-
-    @PutMapping("/{id}")
     @Transactional
+    @PutMapping("/{id}")
     public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid  TopicoUpdateForm form){
         Topico topico = form.atualizar(id, topicoRepository);
         return ResponseEntity.ok(new TopicoDTO(topico));
     }
 
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletar(@PathVariable Long id){
+        topicoRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 
 }
