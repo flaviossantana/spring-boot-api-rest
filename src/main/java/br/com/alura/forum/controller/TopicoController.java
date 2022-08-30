@@ -3,14 +3,17 @@ package br.com.alura.forum.controller;
 import br.com.alura.forum.controller.dto.TopicoDTO;
 import br.com.alura.forum.controller.dto.TopicoDetalheDTO;
 import br.com.alura.forum.controller.form.TopicoForm;
+import br.com.alura.forum.controller.form.TopicoUpdateForm;
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
-import br.com.alura.forum.controller.form.TopicoUpdateForm;
 import br.com.alura.forum.model.Usuario;
 import br.com.alura.forum.repository.Cursorepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,14 +37,19 @@ public class TopicoController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
-    public List<TopicoDTO> lista(String nomeCurso) {
+    public Page<TopicoDTO> lista(
+            @RequestParam(required = false) String nomeCurso,
+            @RequestParam int pagina,
+            @RequestParam int qtd) {
+
+        Pageable paginacao = PageRequest.of(pagina, qtd);
 
         if (nomeCurso == null) {
-            return TopicoDTO.toList(topicoRepository.findAll());
+            return TopicoDTO.toList(topicoRepository.findAll(paginacao));
         }
 
         return TopicoDTO.toList(topicoRepository
-                .findByCursoNomeContainingIgnoreCase(nomeCurso));
+                .findByCursoNomeContainingIgnoreCase(nomeCurso, paginacao));
     }
 
     @GetMapping("/{id}")
