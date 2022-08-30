@@ -11,6 +11,7 @@ import br.com.alura.forum.repository.Cursorepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ public class TopicoController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
+    @Cacheable(value = "topicos-todos-paginado")
     public Page<TopicoDTO> lista(
             @RequestParam(required = false) String nomeCurso,
             @PageableDefault(
