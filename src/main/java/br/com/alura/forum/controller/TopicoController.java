@@ -7,7 +7,7 @@ import br.com.alura.forum.controller.form.TopicoUpdateForm;
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
 import br.com.alura.forum.model.Usuario;
-import br.com.alura.forum.repository.Cursorepository;
+import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TopicoController {
     private TopicoRepository topicoRepository;
 
     @Autowired
-    private Cursorepository cursorepository;
+    private CursoRepository cursorepository;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
