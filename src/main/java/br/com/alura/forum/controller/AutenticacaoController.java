@@ -1,7 +1,13 @@
 package br.com.alura.forum.controller;
 
+import br.com.alura.forum.config.security.TokenService;
 import br.com.alura.forum.controller.form.LoginForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -10,14 +16,25 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AutenticacaoController {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> autenticar(@RequestBody @Valid LoginForm loginForm){
+    public ResponseEntity<?> autenticar(@RequestBody @Valid LoginForm loginForm) {
+        try {
+            UsernamePasswordAuthenticationToken dadosLogin = loginForm.converter();
+            Authentication authenticate = authenticationManager.authenticate(dadosLogin);
 
-        System.out.println(loginForm.getEmail());
-        System.out.println(loginForm.getSenha());
+            String gerar = tokenService.gerar(authenticate);
 
-        return ResponseEntity.ok().build();
+
+            return ResponseEntity.ok(gerar);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
