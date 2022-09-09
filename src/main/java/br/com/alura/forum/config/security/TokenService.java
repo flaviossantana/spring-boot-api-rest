@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -34,5 +32,19 @@ public class TokenService {
                 .setExpiration(dataExpiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public boolean isValido(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(this.secret)
+                    .parseClaimsJws(token);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
+
+
     }
 }

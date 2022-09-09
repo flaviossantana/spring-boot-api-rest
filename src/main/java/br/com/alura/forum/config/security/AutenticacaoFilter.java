@@ -10,6 +10,11 @@ import java.io.IOException;
 
 public class AutenticacaoFilter  extends OncePerRequestFilter {
 
+    private TokenService tokenService;
+
+    public AutenticacaoFilter(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -17,18 +22,19 @@ public class AutenticacaoFilter  extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
+        tokenService.isValido(recuperarToken(request));
+        filterChain.doFilter(request, response);
+    }
 
+    private String recuperarToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
-        if(token != null && !token.isEmpty() && token.startsWith("Bearer ")){
-            token.substring(7, token.length());
+        if(token == null || token.isEmpty() || !token.startsWith("Bearer")){
+            return null;
         }
 
-
-
-
-        filterChain.doFilter(request, response);
-
-
+        return token.substring(7);
     }
+
+
 }
