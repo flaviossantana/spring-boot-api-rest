@@ -1,6 +1,5 @@
 package br.com.alura.forum.config.security;
 
-import br.com.alura.forum.model.Usuario;
 import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AutenticacaoFilter  extends OncePerRequestFilter {
+public class AutenticacaoFilter extends OncePerRequestFilter {
 
     private TokenService tokenService;
 
@@ -31,11 +30,18 @@ public class AutenticacaoFilter  extends OncePerRequestFilter {
 
         String token = recuperarToken(request);
 
-        if(tokenService.isValido(token)){
-            Long idUsuario = tokenService.getIdUsuario(token);
-            Usuario usuario = usuarioRepository.findById(idUsuario).get();
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (tokenService.isValido(token)) {
+            usuarioRepository.findById(tokenService.getIdUsuario(token))
+                    .ifPresent(usuario -> {
+                                SecurityContextHolder
+                                        .getContext()
+                                        .setAuthentication(new UsernamePasswordAuthenticationToken(
+                                                usuario,
+                                                null,
+                                                usuario.getAuthorities())
+                                        );
+                            }
+                    );
         }
 
         filterChain.doFilter(request, response);
@@ -44,7 +50,7 @@ public class AutenticacaoFilter  extends OncePerRequestFilter {
     private String recuperarToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
-        if(token == null || token.isEmpty() || !token.startsWith("Bearer")){
+        if (token == null || token.isEmpty() || !token.startsWith("Bearer")) {
             return null;
         }
 

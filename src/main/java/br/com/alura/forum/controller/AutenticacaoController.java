@@ -31,7 +31,6 @@ public class AutenticacaoController {
 
             String token = tokenService.gerar(authenticate);
 
-
             return ResponseEntity.ok(new TokenDto(token, "Bearer"));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().build();
