@@ -21,13 +21,13 @@ public class TokenService {
 
     public String gerar(Authentication authenticate) {
 
-        Usuario logado = (Usuario) authenticate.getPrincipal();
         Date hoje = new Date();
+        Usuario logado = (Usuario) authenticate.getPrincipal();
         Date dataExpiracao = new Date(hoje.getTime() + expiration);
 
         return Jwts
                 .builder()
-                .setIssuer("SPRING BOOT API")
+                .setIssuer("br.com.alura.forum")
                 .setSubject(logado.getId().toString())
                 .setIssuedAt(hoje)
                 .setExpiration(dataExpiracao)
