@@ -24,7 +24,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -43,11 +42,7 @@ public class TopicoController {
     @Cacheable(value = "topicos-todos-paginado")
     public Page<TopicoDTO> lista(
             @RequestParam(required = false) String nomeCurso,
-            @PageableDefault(
-                    sort = "id",
-                    direction = Sort.Direction.DESC,
-                    page = 0,
-                    size = 10) Pageable paginacao) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable paginacao) {
 
         if (nomeCurso == null) {
             return TopicoDTO.toList(topicoRepository.findAll(paginacao));
@@ -98,7 +93,7 @@ public class TopicoController {
     @Transactional
     @DeleteMapping("/{id}")
     @CacheEvict(cacheNames = "topicos-todos-paginado", allEntries = true)
-    public ResponseEntity deletar(@PathVariable Long id){
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
 
         if (isTopicoNotFound(id)){
             return ResponseEntity.notFound().build();
@@ -109,12 +104,7 @@ public class TopicoController {
     }
 
     private boolean isTopicoNotFound(@PathVariable Long id) {
-        Optional<Topico> optional = topicoRepository.findById(id);
-
-        if(!optional.isPresent()){
-            return true;
-        }
-        return false;
+        return  !topicoRepository.findById(id).isPresent();
     }
 
 }
