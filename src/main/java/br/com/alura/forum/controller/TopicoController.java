@@ -97,6 +97,7 @@ public class TopicoController {
 
     @Transactional
     @DeleteMapping("/{id}")
+    @CacheEvict(cacheNames = "topicos-todos-paginado", allEntries = true)
     public ResponseEntity deletar(@PathVariable Long id){
 
         if (isTopicoNotFound(id)){
