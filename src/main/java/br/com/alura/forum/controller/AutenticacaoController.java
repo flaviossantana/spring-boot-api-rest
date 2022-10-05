@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@Profile("prod")
 @RequestMapping("/auth")
+@Profile(value = {"prod", "test"})
 public class AutenticacaoController {
 
     @Autowired
